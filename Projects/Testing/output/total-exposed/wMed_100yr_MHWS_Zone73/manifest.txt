@@ -1,0 +1,128 @@
+Pipeline-ID: total-exposed
+Pipeline-Description: 
+Start-Time: 2025-11-18T13:46:08.4399318
+Finish-Time: 2025-11-18T13:46:23.9712754
+
+Riskscape Version
+-----------------
+Engine: 1.11.0
+engine: 1.11.0
+cli: 1.11.0
+cpython: 1.11.0
+defaults: 1.11.0
+jython: 1.11.0
+postgis: 1.11.0
+wizard: 1.11.0
+wizard-cli: 1.11.0
+
+Host Information
+----------------
+User: Ashton.Eaves
+Host: ASHTONEZBFFG9.hbrc.govt.nz
+
+Pipeline Outputs
+----------------
+summary.csv (size=275, checksum=null)
+event-impact.shp (size=2046312, checksum=null)
+pipeline.txt (size=1418, checksum=null)
+manifest.txt (checksum=6857b236c7aceecb90cfa9d1ac6b64bceaea68521e739f8b5fd06d213a45e360)
+
+Pipeline Structure
+------------------
+
+Step-save_summary: save
+  Parameters: 
+    name : [summary]
+    format : [csv]
+  Depends On: 
+    group
+
+Step-save_event-impact: save
+  Parameters: 
+    name : [event-impact]
+  Depends On: 
+    select_1
+
+Step-group: group
+  Parameters: 
+    select : [StructDeclaration[{*, Depth."range_<_0_4".round_sum_PropertyPo + Depth."range_0_4_0_6".round_sum_PropertyPo + Depth."range_0_6_0_8".round_sum_PropertyPo + Depth."range_0_8_1_2".round_sum_PropertyPo + Depth."range_1_2_+".round_sum_PropertyPo as Number_Exposed, round(sum(exposure.PropertyPo)) as Total_Population, bucket_range(pick: hazard, select: {round(sum(exposure.PropertyPo))}, range: [0.4, 0.6, 0.8, 1.2]) as Depth}]]
+    by : [StructDeclaration[{'Total' as Results}]]
+  Depends On: 
+    report_summary
+
+Step-select_1: select
+  Parameters: 
+    select : [StructDeclaration[{*, exposure.PropertyPo as PropertyPo}]]
+  Depends On: 
+    report_event-impact
+
+Step-report_summary: select
+  Parameters: 
+    select : [StructDeclaration[{*}]]
+  Depends On: 
+    event_impact_table
+
+Step-report_event-impact: select
+  Parameters: 
+    select : [StructDeclaration[{*}]]
+  Depends On: 
+    event_impact_table
+
+Step-event_impact_table: select
+  Parameters: 
+    select : [StructDeclaration[{exposure, hazard, consequence}]]
+  Depends On: 
+    raw_results
+
+Step-raw_results: select
+  Parameters: 
+    select : [StructDeclaration[{*}]]
+  Depends On: 
+    select
+
+Step-select: select
+  Parameters: 
+    select : [StructDeclaration[{*, consequence: map(hazard, hv -> is_exposed(exposure, hv))}]]
+  Depends On: 
+    sampled
+
+Step-sampled: select
+  Parameters: 
+    select : [StructDeclaration[{*}]]
+  Depends On: 
+    sample_hazard_layer
+
+Step-sample_hazard_layer: select
+  Parameters: 
+    select : [StructDeclaration[{*, sample_one(geometry: exposure, coverage: hazard) as hazard}]]
+  Depends On: 
+    exposures_join_hazards
+
+Step-exposures_join_hazards: join
+  Parameters: 
+    on : [Constant[true]]
+  Depends On: 
+    exposures
+    hazards
+
+Step-exposures: select
+  Parameters: 
+    select : [StructDeclaration[{exposure}]]
+  Depends On: 
+    exposures_input
+
+Step-hazards: select
+  Parameters: 
+    select : [StructDeclaration[{hazard as hazard}]]
+  Depends On: 
+    hazards_input
+
+Step-exposures_input: input
+  Parameters: 
+    name : [exposure]
+    relation : [Constant['Census2023PopulationAtAddress.shp']]
+
+Step-hazards_input: input
+  Parameters: 
+    name : [hazard]
+    value : [FunctionCall[bookmark('C:\2_Workspaces\Riskscape\Projects\Testing\\wMed_100yr_MHWS_Zone73.tif')]]

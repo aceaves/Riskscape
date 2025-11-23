@@ -1,0 +1,63 @@
+# ✅ PARAMETERS
+parameter exposure
+parameter hazard
+
+# ✅ EXPOSURE INPUT
+input(relation: $exposure, name: 'exposure') as exposures_input
+ -> select({exposure}) as exposures
+
+# ✅ HAZARD INPUT
+input(value: bookmark($hazard), name: 'hazard') as hazards_input
+ -> select({hazard as hazard}) as hazards
+ -> exposures_input.join(on: true) as exposures_join_hazards
+# ✅ SAMPLE HAZARD
+exposures_join_hazards
+ -> select({*, sample_one(geometry: exposure, coverage: hazard) as hazard}) as sample_hazard_layer
+
+# ✅ AREA INPUT
+input(relation: 'SurfaceSubcatchments.shp', name: 'area') as areas_input
+ -> group({to_coverage(area) as area}) as areas
+ -> sample_hazard_layer.join(on: true) as exposures_join_areas
+
+# ✅ SAMPLE AREA
+exposures_join_areas
+ -> select({*, sample_one(geometry: exposure, coverage: area, buffer-distance: 1000) as area})
+
+# ✅ PROBABILITIES (Python function)
+ -> select({*, probability: map(hazard, hv -> Building_Fragility(exposure, hv))})
+
+# ✅ DAMAGE STATE (Corrected weights)
+ -> select({
+      *,
+      if(is_null(hazard),
+         '0: Not damaged',
+         random_choice(
+            ['0: Not damaged', '1: Light', '2: Minor', '3: Moderate', '4: Severe', '5: Collapse'],
+            weights: [
+              1.0 - probability.DS_1,
+              probability.DS_1 - probability.DS_2,
+              probability.DS_2 - probability.DS_3,
+              probability.DS_3 - probability.DS_4,
+              probability.DS_4 - probability.DS_5
+            ]
+         )
+      ) as DamageState
+    }) as event_impact_table
+
+# ✅ SUMMARY REPORT (Grouped by Catchment instead of Region)
+event_impact_table
+ -> group(
+      by: {area.Catchment as Region},
+      select: {
+        Region,
+        count(hazard) as Number_Exposed,
+        count(exposure) as Total_Buildings,
+        DamageState
+      }
+    )
+ -> sort([Region], direction: ['ASC'])
+ -> save(name: 'summary', format: 'csv') as save_summary
+
+# ✅ FULL EVENT OUTPUT
+event_impact_table
+ -> save(name: 'event-impact') as save_event_impact

@@ -1,0 +1,13 @@
+﻿name,runtime-ms,runtime-average-ms,tuples-in,tuples-in-per-sec,tuples-out,tuples-out-per-sec,context-switches
+save_event-impact-sink,13581,7495.56,73079,3835.92,,,2
+steps-sample_hazard_layer~>event_impact_table,8873,4.72,73079,4587.17,73079,4587.27,1825
+exposures_input,1364,4.36,,,73079,5770.10,301
+steps-report_summary~>report_summary-sink,100,0.05,73079,4587.15,,,1614
+exposures_join_hazards,57,0.00,73079,4988.57,73079,4988.57,4034
+steps-report_event-impact~>select_1,34,0.03,73079,4189.33,73079,4189.33,2962
+exposures,13,0.00,73079,5442.79,73079,5442.81,1773
+group,6,6.00,,,1,0.00,1
+save_summary-sink,3,3.00,1,0.00,,,1
+hazards_input,1,1.00,,,1,0.00,1
+exposures_join_hazards-sink,0,0.00,1,0.00,,,2
+hazards,0,0.00,1,0.00,1,0.00,12
