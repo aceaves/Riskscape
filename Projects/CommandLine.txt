@@ -38,8 +38,8 @@ ________________________________________________________________________________
 # Building damage:
 
 riskscape model run building-damage ^
-  -p input-exposures.layer="C:\2_Workspaces\Riskscape\Projects\Inputs\Buildings\BuildingOutlinesProcessed_HB.shp" ^
-  -p input-hazards.layer="C:\2_Workspaces\Riskscape\Projects\Testing\Coastal_Inundation_Depth_2020_50yrARI.tif"
+  -p exposure="C:/2_Workspaces/Riskscape/Projects/Testing/BuildingOutlinesProcessed_HB.shp" ^
+  -p hazard="C:/2_Workspaces/Riskscape/Projects/Testing/Coastal_Inundation_Depth_2020_50yrARI.tif"
 
 
 __________________________________________________________________________________________________________________
