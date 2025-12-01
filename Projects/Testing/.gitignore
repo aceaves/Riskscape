@@ -1,0 +1,29 @@
+# Exclude hazard raster files
+*.tif
+*.tiff
+
+# Exclude shapefile main files
+*.shp
+
+# Also exclude common shapefile sidecar files (optional but recommended)
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.sbn
+*.sbx
+*.xml
+*.atx
+*.ixs
+*.mxs
+
+# Exclude other large geospatial formats if present
+*.laz
+*.las
+*.laz
+*.dem
+*.img
+*.ecw
+
+# Exclude the entire outputs folder if you don't want model results versioned
+/output/

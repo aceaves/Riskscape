@@ -1,7 +1,7 @@
 # merge_summaries.ps1
 
-$base = 'C:\2_Workspaces\Riskscape\Projects\Testing\output\building-damage'
-$out  = Join-Path $base 'all_summaries_building_damages.csv'
+$base = 'C:\2_Workspaces\Riskscape\Projects\Testing\output\total-exposed'
+$out  = Join-Path $base 'all_summaries_total_exposed.csv'
 
 Remove-Item $out -ErrorAction Ignore
 

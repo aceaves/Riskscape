@@ -1,5 +1,4 @@
-# Note: this function was provided by NIWA https://niwa.co.nz and has been
-# refactored and adapted for this tutorial.
+# Note: this function was provided by NIWA https://niwa.co.nz
 
 def function(building, hazard_depth):
     DS_1_Prob = 0.0

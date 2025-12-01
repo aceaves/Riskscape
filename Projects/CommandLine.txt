@@ -40,8 +40,15 @@ ________________________________________________________________________________
 riskscape model run building-damage ^
   -p exposure="C:/2_Workspaces/Riskscape/Projects/Testing/BuildingOutlinesProcessed_HB.shp" ^
   -p hazard="C:/2_Workspaces/Riskscape/Projects/Testing/Coastal_Inundation_Depth_2020_50yrARI.tif"
+  
+Swap Region grouping to:
 
+Catchment
+District
+Meshblock
+Property parcel
 
+Just a one-word change in the pipeline.
 __________________________________________________________________________________________________________________
 # Running for people:
 
@@ -58,6 +65,8 @@ ________________________________________________________________________________
 
 D:\Riskscape\Projects\Testing> run_all_riskscape.bat
 
+or run_all_riskscape_building_damage.bat
+
 
 # Then consolidate the summaries in here "D:\Riskscape\Projects\Testing\output\total-exposed", run:
 
@@ -70,5 +79,6 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 # then back to running PS:
 
 .\merge_summaries.ps1
+
 
 
