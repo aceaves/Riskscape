@@ -1,0 +1,81 @@
+Repo to track changes from the original Riskscape source code to work for Hawke's Bay.
+See: https://engine-docs.sites.riskscape.nz/intro/getting-started.html for all the details
+
+Command line to run model:
+# Go to working directory:
+
+D: && cd "D:\Riskscape\Projects\getting-started"
+
+# On remote machine:
+D: && cd "D:\Riskscape\Projects\testing"
+
+# On C drive:
+C: && cd "C:\2_Workspaces\Riskscape\Projects\Testing"
+
+# Basic Riskscape commands:
+
+"C:\Program Files\riskscape\bin\riskscape.bat" model run total-exposed
+
+"C:\Program Files\riskscape\bin\riskscape.bat" model run total-exposed -p "input-hazards.layer=MaxEnv_All_Scenarios_10m.tif"
+
+"C:\Program Files\riskscape\bin\riskscape.bat" model run building-damage
+
+
+"C:\Program Files\riskscape\bin\riskscape.bat" model run total-exposed -p "input-hazards.layer=wMed_100yr_MHWSplus1p99m_Zone73.tif"
+
+"C:\Program Files\riskscape\bin\riskscape.bat" --help
+
+"C:\Program Files\riskscape\bin\riskscape.bat" model list
+
+# Once Environment Variable is set for riskscape drop the file path. Make sure the project.ini file matches:
+
+riskscape model run total-exposed ^
+  -p asset="D:\Riskscape\Projects\Testing\BuildingOutlinesProcessed_HB.shp" ^
+  -p hazard="D:\Riskscape\Projects\Testing\Coastal_Inundation_Depth_2100_100yrARI.tif"
+  
+riskscape model run total-exposed ^
+  -p asset="C:\2_Workspaces\Riskscape\Projects\Testing\BuildingOutlinesProcessed_HB.shp" ^
+  -p hazard="C:\2_Workspaces\Riskscape\Projects\Testing\Coastal_Inundation_Depth_2100_100yrARI.tif"
+__________________________________________________________________________________________________________________
+# Building damage:
+
+riskscape model run building-damage ^
+  -p exposure="C:/2_Workspaces/Riskscape/Projects/Testing/BuildingOutlinesProcessed_HB.shp" ^
+  -p hazard="C:/2_Workspaces/Riskscape/Projects/Testing/Coastal_Inundation_Depth_2020_50yrARI.tif"
+
+Swap Region grouping to:
+
+Catchment
+District
+Meshblock
+Property parcel
+
+Just a one-word change in the pipeline.
+__________________________________________________________________________________________________________________
+# Running for people:
+
+riskscape model run total-exposed ^
+  -p asset="D:\Riskscape\Projects\Testing\Census2023PopulationAtAddress.shp" ^
+  -p hazard="D:\Riskscape\Projects\Testing\Coastal_Inundation_Depth_2100_100yrARI.tif"
+  
+riskscape model run total-exposed ^
+  -p asset="C:\2_Workspaces\Riskscape\Projects\Testing\Census2023PopulationAtAddress.shp" ^
+  -p hazard="C:\2_Workspaces\Riskscape\Projects\Testing\Coastal_Inundation_Depth_2100_100yrARI.tif"
+
+__________________________________________________________________________________________________________________
+# Run multiple inputs simultaneuously:
+
+D:\Riskscape\Projects\Testing> run_all_riskscape.bat
+
+
+# Then consolidate the summaries in here "D:\Riskscape\Projects\Testing\output\total-exposed", run:
+
+powershell -ExecutionPolicy Bypass -File "D:\Riskscape\Projects\Testing\output\total-exposed\merge_summaries.ps1"
+
+# When running powershell on local PC, run this first:
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# then back to running PS:
+
+.\merge_summaries.ps1
